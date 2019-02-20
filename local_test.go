@@ -243,10 +243,15 @@ func TestLocal_NewShell(t *testing.T) {
 
 func TestLocal_FormatRun(t *testing.T) {
 	l := run.NewLocal(run.LocalConfig{})
-	msg := l.FormatRun("uname", "-a")
+
+	msg := l.FormatRun("uname")
+	t.Logf("cmd = %q", "uname")
+	t.Logf("msg = %q", msg)
+	assert.Equal(t, msg, "uname")
+
+	msg = l.FormatRun("uname", "-a")
 	t.Logf("cmd = %q", "uname -a")
 	t.Logf("msg = %q", msg)
-
 	assert.Equal(t, msg, "uname -a")
 }
 
@@ -285,11 +290,17 @@ func TestLocal_ShellDir(t *testing.T) {
 
 func TestLocal_FormatShell(t *testing.T) {
 	l := run.NewLocal(run.LocalConfig{})
-	cmd := fmt.Sprintf(`%s -c "%s"`, l.ShellExecutable, "uname -a")
-	msg := l.FormatShell("uname -a")
+
+	cmd := fmt.Sprintf(`%s -c "%s"`, l.ShellExecutable, "uname")
+	msg := l.FormatShell("uname")
 	t.Logf("cmd = %q", cmd)
 	t.Logf("msg = %q", msg)
+	assert.Equal(t, msg, `/bin/sh -c "uname"`)
 
+	cmd = fmt.Sprintf(`%s -c "%s"`, l.ShellExecutable, "uname -a")
+	msg = l.FormatShell("uname -a")
+	t.Logf("cmd = %q", cmd)
+	t.Logf("msg = %q", msg)
 	assert.Equal(t, msg, `/bin/sh -c "uname -a"`)
 }
 

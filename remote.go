@@ -340,11 +340,13 @@ func (r *Remote) Run(cmd string, args ...string) (string, string, int, error) {
 // FormatRun returns a string representation of the what command would
 // be run using Run(). Useful for logging commands.
 func (r *Remote) FormatRun(cmd string, args ...string) string {
-	return fmt.Sprintf(`ssh %s@%s %s %s`,
+	s := fmt.Sprintf(`ssh %s@%s %s %s`,
 		r.Credentials.Username,
 		r.Credentials.Hostname,
 		cmd,
 		strings.Join(args, " "))
+
+	return strings.TrimSpace(s)
 }
 
 // Shell runs a command in a shell. The command is passed to the shell
@@ -361,9 +363,11 @@ func (r *Remote) Shell(cmd string) (string, string, int, error) {
 // FormatShell returns a string representation of the what command
 // would be run using Shell().  Useful for logging commands.
 func (r *Remote) FormatShell(cmd string) string {
-	return fmt.Sprintf(`ssh %s@%s %s -c "%s"`,
+	s := fmt.Sprintf(`ssh %s@%s %s -c "%s"`,
 		r.Credentials.Username,
 		r.Credentials.Hostname,
 		r.ShellExecutable,
 		cmd)
+
+	return strings.TrimSpace(s)
 }

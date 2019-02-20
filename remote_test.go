@@ -211,10 +211,18 @@ func TestRemote_NewShell(t *testing.T) {
 func TestRemote_FormatRun(t *testing.T) {
 	r, err := run.NewRemote(run.RemoteConfig{})
 	require.NoError(t, err)
-	msg := r.FormatRun("uname", "-a")
+
+	msg := r.FormatRun("uname")
+	t.Logf("cmd = %q", "uname")
+	t.Logf("msg = %q", msg)
+	assert.Regexp(
+		t,
+		regexp.MustCompile(`ssh .*@.* uname`),
+		msg)
+
+	msg = r.FormatRun("uname", "-a")
 	t.Logf("cmd = %q", "uname -a")
 	t.Logf("msg = %q", msg)
-
 	assert.Regexp(
 		t,
 		regexp.MustCompile(`ssh .*@.* uname -a`),
@@ -224,11 +232,20 @@ func TestRemote_FormatRun(t *testing.T) {
 func TestRemote_FormatShell(t *testing.T) {
 	r, err := run.NewRemote(run.RemoteConfig{})
 	require.NoError(t, err)
-	cmd := fmt.Sprintf(`%s -c "%s"`, r.ShellExecutable, "uname -a")
-	msg := r.FormatShell("uname -a")
+
+	cmd := fmt.Sprintf(`%s -c "%s"`, r.ShellExecutable, "uname")
+	msg := r.FormatShell("uname")
 	t.Logf("cmd = %q", cmd)
 	t.Logf("msg = %q", msg)
+	assert.Regexp(
+		t,
+		regexp.MustCompile(`ssh .*@.* /bin/sh -c "uname"`),
+		msg)
 
+	cmd = fmt.Sprintf(`%s -c "%s"`, r.ShellExecutable, "uname -a")
+	msg = r.FormatShell("uname -a")
+	t.Logf("cmd = %q", cmd)
+	t.Logf("msg = %q", msg)
 	assert.Regexp(
 		t,
 		regexp.MustCompile(`ssh .*@.* /bin/sh -c "uname -a"`),

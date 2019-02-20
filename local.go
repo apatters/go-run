@@ -201,7 +201,7 @@ func (l *Local) Run(cmd string, args ...string) (string, string, int, error) {
 // FormatRun returns a string representation of the what command would
 // be run using Run(). Useful for logging commands.
 func (l *Local) FormatRun(cmd string, args ...string) string {
-	return cmd + " " + strings.Join(args, " ")
+	return strings.TrimSpace(cmd + " " + strings.Join(args, " "))
 }
 
 // Shell runs a command in a shell. The command is passed to the shell
@@ -217,5 +217,5 @@ func (l *Local) Shell(cmd string) (string, string, int, error) {
 // FormatShell returns a string representation of the what command
 // would be run using Shell(). Useful for logging commands.
 func (l *Local) FormatShell(cmd string) string {
-	return fmt.Sprintf(`%s -c "%s"`, l.ShellExecutable, cmd)
+	return strings.TrimSpace(fmt.Sprintf(`%s -c "%s"`, l.ShellExecutable, cmd))
 }
